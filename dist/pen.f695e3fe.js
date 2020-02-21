@@ -117,79 +117,244 @@ parcelRequire = (function (modules, cache, entry, globalName) {
   }
 
   return newRequire;
-})({"C:/Users/林鼎祺/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
+})({"pen.js":[function(require,module,exports) {
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+var lineWidth = 8;
+ctx.lineCap = "round";
+autoSetCanvasSize(canvas);
+listenToMouse(canvas);
+var eraserEnable = false; //橡皮擦画笔切换
 
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
+eraser.onclick = function () {
+  eraserEnable = true;
+  eraser.classList.add('active');
+  brush.classList.remove('active');
+};
+
+brush.onclick = function () {
+  eraserEnable = false;
+  brush.classList.add('active');
+  eraser.classList.remove('active');
+};
+
+black.onclick = function () {
+  ctx.fillStyle = 'black';
+  ctx.strokeStyle = 'black';
+  black.classList.add('active');
+  red.classList.remove('active');
+  yellow.classList.remove('active');
+  green.classList.remove('active');
+  blue.classList.remove('active');
+  ctx.lineCap = "round";
+};
+
+red.onclick = function () {
+  ctx.fillStyle = 'red';
+  ctx.strokeStyle = 'red';
+  black.classList.remove('active');
+  red.classList.add('active');
+  yellow.classList.remove('active');
+  green.classList.remove('active');
+  blue.classList.remove('active');
+};
+
+yellow.onclick = function () {
+  ctx.fillStyle = 'yellow';
+  ctx.strokeStyle = 'yellow';
+  black.classList.remove('active');
+  red.classList.remove('active');
+  yellow.classList.add('active');
+  green.classList.remove('active');
+  blue.classList.remove('active');
+};
+
+green.onclick = function () {
+  ctx.fillStyle = 'green';
+  ctx.strokeStyle = 'green';
+  black.classList.remove('active');
+  red.classList.remove('active');
+  yellow.classList.remove('active');
+  green.classList.add('active');
+  blue.classList.remove('active');
+};
+
+blue.onclick = function () {
+  ctx.fillStyle = 'blue';
+  ctx.strokeStyle = 'blue';
+  black.classList.remove('active');
+  red.classList.remove('active');
+  yellow.classList.remove('active');
+  green.classList.remove('active');
+  blue.classList.add('active');
+};
+
+clear.onclick = function () {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+};
+
+big.onclick = function () {
+  lineWidth = 8;
+  big.classList.add('active');
+  middle.classList.remove('active');
+  small.classList.remove('active');
+};
+
+middle.onclick = function () {
+  lineWidth = 5;
+  big.classList.remove('active');
+  middle.classList.add('active');
+  small.classList.remove('active');
+};
+
+small.onclick = function () {
+  lineWidth = 2;
+  big.classList.remove('active');
+  middle.classList.remove('active');
+  small.classList.add('active');
+};
+
+download.onclick = function () {
+  var url = canvas.toDataURL("image/png");
+  console.log(url);
+  var a = document.createElement('a');
+  document.body.appendChild(a);
+  a.href = url;
+  a.download = 'canvas画板.png';
+  a.target = '_blank';
+  a.click();
+};
+
+function listenToMouse(canvas) {
+  var usingMouse = false; //鼠标触发时间默认设置false
+
+  var lastPoint = {
+    'x': undefined,
+    'y': undefined
+  }; //鼠标最后点击的点坐标初始化
+
+  if (document.body.ontouchstart !== undefined) {
+    //判断设备是否支持touch事件
+    canvas.ontouchstart = function (a) {
+      //touch开始
+      console.log(a);
+      var x = a.touches[0].clientX;
+      var y = a.touches[0].clientY;
+      usingMouse = true;
+
+      if (eraserEnable) {
+        ctx.clearRect(x - 25, y - 25, 50, 50);
+      } else {
+        lastPoint = {
+          'x': x,
+          'y': y
+        };
+      }
+    };
+
+    canvas.ontouchmove = function (a) {
+      //touch移动
+      var x = a.touches[0].clientX;
+      var y = a.touches[0].clientY;
+
+      if (!usingMouse) {
+        return;
+      }
+
+      if (eraserEnable) {
+        ctx.clearRect(x - 10, y - 10, 20, 20);
+      } else {
+        var newPoint = {
+          'x': x,
+          'y': y
+        };
+        drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y);
+        lastPoint = newPoint;
+      }
+    };
+
+    canvas.ontouchend = function () {
+      //touch结束
+      usingMouse = false;
+    };
+  } else {
+    //如果不支持touch事件，则执行鼠标事件
+    canvas.onmousedown = function (a) {
+      //鼠标按下事件
+      var x = a.clientX;
+      var y = a.clientY;
+      usingMouse = true;
+
+      if (eraserEnable) {
+        ctx.clearRect(x - 10, y - 10, 20, 20);
+      } else {
+        lastPoint = {
+          'x': x,
+          'y': y
+        }; // drawPoint(x,y,1)
+      }
+    };
+
+    canvas.onmousemove = function (a) {
+      //鼠标移动事件
+      var x = a.clientX;
+      var y = a.clientY;
+
+      if (!usingMouse) {
+        return;
+      }
+
+      if (eraserEnable) {
+        ctx.clearRect(x - 10, y - 10, 20, 20);
+      } else {
+        var newPoint = {
+          'x': x,
+          'y': y
+        }; // drawPoint(x,y,1)
+
+        drawLine(lastPoint.x, lastPoint.y, newPoint.x, newPoint.y);
+        lastPoint = newPoint;
+      }
+    };
+
+    canvas.onmouseup = function () {
+      //鼠标松开事件
+      usingMouse = false;
+    };
   }
-
-  return bundleURL;
 }
 
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
-
-  return '/';
+function drawPoint(x, y, radius) {
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fill();
 }
 
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
+function drawLine(x1, y1, x2, y2) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineWidth = lineWidth;
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  ctx.closePath();
 }
 
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"C:/Users/林鼎祺/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
+function autoSetCanvasSize(canvas) {
+  //全屏函数
+  resize();
 
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
+  window.onresize = function () {
+    resize();
   };
 
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
+  function resize() {
+    var pageWidth = document.documentElement.clientWidth;
+    var pageHeight = document.documentElement.clientHeight;
+    canvas.width = pageWidth;
+    canvas.height = pageHeight;
   }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
 }
-
-module.exports = reloadCSS;
-},{"./bundle-url":"C:/Users/林鼎祺/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/bundle-url.js"}],"style.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"C:/Users/林鼎祺/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/css-loader.js"}],"C:/Users/林鼎祺/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{}],"C:/Users/林鼎祺/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -393,5 +558,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["C:/Users/林鼎祺/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js"], null)
-//# sourceMappingURL=/style.e308ff8e.js.map
+},{}]},{},["C:/Users/林鼎祺/AppData/Local/Yarn/Data/global/node_modules/parcel/src/builtins/hmr-runtime.js","pen.js"], null)
+//# sourceMappingURL=/pen.f695e3fe.js.map

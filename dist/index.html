@@ -10,21 +10,41 @@
 <script src="/style.e308ff8e.js"></script></head>
 
 <body>
-    <div class="button">
-        <div class="color">
-            <button id="red"></button>
-            <button id="green"></button>
-            <button id="blue"></button>
-            <button id="rubber"></button>
-        </div>
-        <div class="thickness">
-            <button id="strong">一条粗线</button>
-            <button id="mid">一条线</button>
-            <button id="thin">细线</button>
-        </div>
+    <!-- <button id="eraser">橡皮擦</button>
+    <button id="brush">画笔</button> -->
+    <canvas id="canvas" width="500" height="500"></canvas>
+
+    <div id="actions" class="actions">
+        <svg id="brush" class="icon active" aria-hidden="true">
+            <use xlink:href="#icon-Brush-"></use>
+        </svg>
+
+        <svg id="eraser" class="icon" aria-hidden="true">
+            <use xlink:href="#icon-Eraser"></use>
+        </svg>
+        <svg id="clear" class="icon" aria-hidden="true">
+            <use xlink:href="#icon-clear"></use>
+        </svg>
     </div>
-    <canvas id="canvas" width="100" height="100"></canvas>
-    <script src="/pen.092b758b.js"> </script>
+    <div class="download">
+        <svg id="download" class="icon" aria-hidden="true">
+            <use xlink:href="#icon-download"></use>
+        </svg>
+    </div>
+    <ol id="colors">
+        <li id="black" class="active"></li>
+        <li id="red"></li>
+        <li id="yellow"></li>
+        <li id="green"></li>
+        <li id="blue"></li>
+    </ol>
+    <ol id="line">
+        <li id="big" class="active"><span></span></li>
+        <li id="middle"><span></span></li>
+        <li id="small"><span></span></li>
+    </ol>
+    <script src="/pen.f695e3fe.js"> </script>
+    <script src="//at.alicdn.com/t/font_1649434_soo8ghoi7t.js"></script>
 </body>
 
 </html>
