@@ -1,8 +1,9 @@
 
 var canvas = document.getElementById('canvas')
 var ctx = canvas.getContext('2d')
+ctx.lineCap = "square"
+console.log(ctx.lineCap)
 var lineWidth = 8
-ctx.lineCap = "round"
 
 autoSetCanvasSize(canvas)
 listenToMouse(canvas)
@@ -27,7 +28,6 @@ black.onclick = function () {
     yellow.classList.remove('active')
     green.classList.remove('active')
     blue.classList.remove('active')
-    ctx.lineCap = "round"
 
 }
 red.onclick = function () {
@@ -102,6 +102,7 @@ download.onclick = function () {
 function listenToMouse(canvas) {
     var usingMouse = false //鼠标触发时间默认设置false
     var lastPoint = { 'x': undefined, 'y': undefined } //鼠标最后点击的点坐标初始化
+    ctx.lineCap = "round"
 
     if (document.body.ontouchstart !== undefined) {  //判断设备是否支持touch事件
 

@@ -120,8 +120,9 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 })({"pen.js":[function(require,module,exports) {
 var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
+ctx.lineCap = "square";
+console.log(ctx.lineCap);
 var lineWidth = 8;
-ctx.lineCap = "round";
 autoSetCanvasSize(canvas);
 listenToMouse(canvas);
 var eraserEnable = false; //橡皮擦画笔切换
@@ -146,7 +147,6 @@ black.onclick = function () {
   yellow.classList.remove('active');
   green.classList.remove('active');
   blue.classList.remove('active');
-  ctx.lineCap = "round";
 };
 
 red.onclick = function () {
@@ -232,6 +232,8 @@ function listenToMouse(canvas) {
     'x': undefined,
     'y': undefined
   }; //鼠标最后点击的点坐标初始化
+
+  ctx.lineCap = "round";
 
   if (document.body.ontouchstart !== undefined) {
     //判断设备是否支持touch事件
@@ -382,7 +384,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "65282" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49207" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
